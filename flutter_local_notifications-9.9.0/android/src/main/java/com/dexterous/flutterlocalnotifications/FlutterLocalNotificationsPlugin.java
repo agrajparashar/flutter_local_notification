@@ -1455,6 +1455,10 @@ public class FlutterLocalNotificationsPlugin
     return false;
   }
 
+  public static getNotificationChannel(final String updatedPayload){
+    channel.invokeMethod("selectNotification", updatedPayload);
+  }
+
   private boolean hasInvalidRawSoundResource(
       Result result, NotificationDetails notificationDetails) {
     if (!StringUtils.isNullOrEmpty(notificationDetails.sound)

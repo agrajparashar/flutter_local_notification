@@ -24,7 +24,6 @@ import android.net.Network;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
-import io.flutter.plugin.common.EventChannel;
 
 /** Created by michaelbui on 24/3/18. */
 @Keep
@@ -73,7 +72,7 @@ public class ScheduledNotificationReceiver extends BroadcastReceiver {
             new Runnable() {
               @Override
               public void run() {
-                FlutterLocalNotificationsPlugin().channel.invokeMethod("selectNotification", updatedPayload);
+                FlutterLocalNotificationsPlugin.channel.invokeMethod("selectNotification", updatedPayload);
               }
             };
     mainHandler.post(runnable);

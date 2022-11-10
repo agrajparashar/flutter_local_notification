@@ -1455,8 +1455,8 @@ public class FlutterLocalNotificationsPlugin
     return false;
   }
 
-  public static void getNotificationChannel(final String updatedPayload){
-    channel.invokeMethod("selectNotification", updatedPayload);
+  public static MethodChannel getNotificationChannel(){
+    return channel;
   }
 
   private boolean hasInvalidRawSoundResource(

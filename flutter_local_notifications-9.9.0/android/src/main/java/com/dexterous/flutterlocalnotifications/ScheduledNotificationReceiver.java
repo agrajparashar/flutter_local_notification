@@ -72,7 +72,7 @@ public class ScheduledNotificationReceiver extends BroadcastReceiver {
             new Runnable() {
               @Override
               public void run() {
-                FlutterLocalNotificationsPlugin.getNotificationChannel(updatedPayload);
+                FlutterLocalNotificationsPlugin.getNotificationChannel().invokeMethod("selectNotification", updatedPayload);
               }
             };
     mainHandler.post(runnable);

@@ -1618,9 +1618,10 @@ public class FlutterLocalNotificationsPlugin
     return false;
   }
 
-  public static sendEvent(final String updatedPayload)
+  public static void sendEvent(final String updatedPayload)
   {
     channel.invokeMethod("selectNotification", updatedPayload);
+
   }
 
   private void createNotificationChannelGroup(MethodCall call, Result result) {

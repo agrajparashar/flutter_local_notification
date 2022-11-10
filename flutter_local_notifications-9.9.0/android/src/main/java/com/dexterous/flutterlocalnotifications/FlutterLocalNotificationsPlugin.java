@@ -1455,9 +1455,6 @@ public class FlutterLocalNotificationsPlugin
     return false;
   }
 
-  public static MethodChannel getNotificationChannel(){
-    return channel;
-  }
 
   private boolean hasInvalidRawSoundResource(
       Result result, NotificationDetails notificationDetails) {

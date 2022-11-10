@@ -1455,7 +1455,7 @@ public class FlutterLocalNotificationsPlugin
     return false;
   }
 
-  public static getNotificationChannel(final String updatedPayload){
+  public static void getNotificationChannel(final String updatedPayload){
     channel.invokeMethod("selectNotification", updatedPayload);
   }
 

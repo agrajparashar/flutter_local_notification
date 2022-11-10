@@ -68,6 +68,6 @@ public class ScheduledNotificationReceiver extends BroadcastReceiver {
   }
 
   private void sendEvent(final String updatedPayload) {
-    FlutterLocalNotificationsPlugin.channel.invokeMethod("selectNotification", updatedPayload);
+    FlutterLocalNotificationsPlugin.sendEvent(updatedPayload);;
   }
 }

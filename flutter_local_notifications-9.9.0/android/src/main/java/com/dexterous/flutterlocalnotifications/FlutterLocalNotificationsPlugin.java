@@ -171,7 +171,7 @@ public class FlutterLocalNotificationsPlugin
   private static final String CANCEL_TAG = "tag";
   static String NOTIFICATION_DETAILS = "notificationDetails";
   static Gson gson;
-  public static MethodChannel channel;
+  public MethodChannel channel;
   private Context applicationContext;
   private Activity mainActivity;
   private Intent launchIntent;
@@ -1612,10 +1612,15 @@ public class FlutterLocalNotificationsPlugin
   private Boolean sendNotificationPayloadMessage(Intent intent) {
     if (SELECT_NOTIFICATION.equals(intent.getAction())) {
       String payload = intent.getStringExtra(PAYLOAD);
-      channel.invokeMethod("selectNotification", payload);
+      sendEvent(payload);
       return true;
     }
     return false;
+  }
+
+  public static sendEvent(final String updatedPayload)
+  {
+    channel.invokeMethod("selectNotification", updatedPayload);
   }
 
   private void createNotificationChannelGroup(MethodCall call, Result result) {

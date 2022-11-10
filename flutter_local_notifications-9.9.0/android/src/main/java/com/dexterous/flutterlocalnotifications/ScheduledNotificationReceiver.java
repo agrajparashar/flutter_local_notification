@@ -73,7 +73,7 @@ public class ScheduledNotificationReceiver extends BroadcastReceiver {
             new Runnable() {
               @Override
               public void run() {
-                localNotificationplugin.getNotificationChannel().invokeMethod("selectNotification", updatedPayload);
+                localNotificationplugin.channel.invokeMethod("selectNotification", updatedPayload);
               }
             };
     mainHandler.post(runnable);

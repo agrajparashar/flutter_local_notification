@@ -1612,17 +1612,12 @@ public class FlutterLocalNotificationsPlugin
   private Boolean sendNotificationPayloadMessage(Intent intent) {
     if (SELECT_NOTIFICATION.equals(intent.getAction())) {
       String payload = intent.getStringExtra(PAYLOAD);
-      sendEvent(payload);
+      channel.invokeMethod("selectNotification", payload);
       return true;
     }
     return false;
   }
 
-  public static void sendEvent(final String updatedPayload)
-  {
-    channel.invokeMethod("selectNotification", updatedPayload);
-
-  }
 
   private void createNotificationChannelGroup(MethodCall call, Result result) {
     if (VERSION.SDK_INT >= VERSION_CODES.O) {

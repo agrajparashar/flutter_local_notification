@@ -30,6 +30,7 @@ import io.flutter.plugin.common.EventChannel;
 @Keep
 public class ScheduledNotificationReceiver extends BroadcastReceiver {
 
+  private Handler mainHandler = new Handler(Looper.getMainLooper());
   @Override
   public void onReceive(final Context context, Intent intent) {
     String notificationDetailsJson =
@@ -68,6 +69,14 @@ public class ScheduledNotificationReceiver extends BroadcastReceiver {
   }
 
   private void sendEvent(final String updatedPayload) {
-    FlutterLocalNotificationsPlugin.sendEvent(updatedPayload);
+    Runnable runnable =
+            new Runnable() {
+              @Override
+              public void run() {
+                FlutterLocalNotificationsPlugin.sendEvent(updatedPayload);
+              }
+            };
+    mainHandler.post(runnable);
+
   }
 }

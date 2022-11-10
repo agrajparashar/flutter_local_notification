@@ -10,10 +10,21 @@ import androidx.core.app.NotificationManagerCompat;
 
 import com.dexterous.flutterlocalnotifications.models.NotificationDetails;
 import com.dexterous.flutterlocalnotifications.utils.StringUtils;
+import com.dexterous.flutterlocalnotifications.utils.Util;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
+import io.flutter.plugin.common.EventChannel;
 
 /** Created by michaelbui on 24/3/18. */
 @Keep

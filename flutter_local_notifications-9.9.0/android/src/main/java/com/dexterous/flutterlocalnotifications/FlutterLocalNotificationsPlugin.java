@@ -171,7 +171,7 @@ public class FlutterLocalNotificationsPlugin
   private static final String CANCEL_TAG = "tag";
   static String NOTIFICATION_DETAILS = "notificationDetails";
   static Gson gson;
-  private MethodChannel channel;
+  public MethodChannel channel;
   private Context applicationContext;
   private Activity mainActivity;
   private Intent launchIntent;

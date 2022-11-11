@@ -1619,6 +1619,10 @@ public class FlutterLocalNotificationsPlugin
     return false;
   }
 
+  public void sendLocalNotificationPayloadMessage(final String updatedPayload) {
+      channel.invokeMethod("selectNotification", updatedPayload);
+  }
+
 
   private void createNotificationChannelGroup(MethodCall call, Result result) {
     if (VERSION.SDK_INT >= VERSION_CODES.O) {
@@ -1875,6 +1879,7 @@ public class FlutterLocalNotificationsPlugin
     Map<String, Object> notificationData = call.<Map<String, Object>>argument("notificationData");
     Integer startType = call.<Integer>argument("startType");
     ArrayList<Integer> foregroundServiceTypes = call.argument("foregroundServiceTypes");
+    print("--Agraj startForegroundService");
     if (foregroundServiceTypes == null || foregroundServiceTypes.size() != 0) {
       if (notificationData != null && startType != null) {
         NotificationDetails notificationDetails =

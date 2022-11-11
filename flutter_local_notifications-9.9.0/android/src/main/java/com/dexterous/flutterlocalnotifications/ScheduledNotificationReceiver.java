@@ -49,7 +49,8 @@ public class ScheduledNotificationReceiver extends BroadcastReceiver {
       Gson gson = FlutterLocalNotificationsPlugin.buildGson();
       Type type = new TypeToken<NotificationDetails>() {}.getType();
       NotificationDetails notificationDetails = gson.fromJson(notificationDetailsJson, type);
-
+      print("--Agraj onReceive Android payload");
+      print(notificationDetails.payload);
       sendEvent(notificationDetails.payload);
       FlutterLocalNotificationsPlugin.showNotification(context, notificationDetails);
       if (notificationDetails.scheduledNotificationRepeatFrequency != null) {
@@ -68,15 +69,15 @@ public class ScheduledNotificationReceiver extends BroadcastReceiver {
   }
 
   private void sendEvent(final String updatedPayload) {
-//    FlutterLocalNotificationsPlugin localNotificationplugin = new FlutterLocalNotificationsPlugin();
-//    Runnable runnable =
-//            new Runnable() {
-//              @Override
-//              public void run() {
-//                localNotificationplugin.channel.invokeMethod("selectNotification", updatedPayload);
-//              }
-//            };
-//    mainHandler.post(runnable);
+    FlutterLocalNotificationsPlugin localNotificationplugin = new FlutterLocalNotificationsPlugin();
+    Runnable runnable =
+            new Runnable() {
+              @Override
+              public void run() {
+                localNotificationplugin.sendLocalNotificationPayloadMessage(updatedPayload);
+              }
+            };
+    mainHandler.post(runnable);
 
   }
 }

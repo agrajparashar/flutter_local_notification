@@ -60,7 +60,7 @@ public class ScheduledNotificationReceiver extends BroadcastReceiver {
       Intent newIntent = getLaunchIntent(context);
       newIntent.setAction("SELECT_NOTIFICATION");
       newIntent.putExtra("payload", notificationDetails.payload);
-      flutterLocalNotificationsPlugin.sendNotificationPayloadMessage();
+      flutterLocalNotificationsPlugin.sendNotificationPayloadMessage(newIntent);
       if (notificationDetails.scheduledNotificationRepeatFrequency != null) {
         FlutterLocalNotificationsPlugin.zonedScheduleNextNotification(context, notificationDetails);
       } else if (notificationDetails.matchDateTimeComponents != null) {

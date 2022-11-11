@@ -91,7 +91,6 @@ import android.net.Network;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import io.flutter.plugin.common.EventChannel;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.BinaryMessenger;
@@ -1612,7 +1611,7 @@ public class FlutterLocalNotificationsPlugin
     return res;
   }
 
-  private Boolean sendNotificationPayloadMessage(Intent intent) {
+  public Boolean sendNotificationPayloadMessage(Intent intent) {
     if (SELECT_NOTIFICATION.equals(intent.getAction())) {
       String payload = intent.getStringExtra(PAYLOAD);
       channel.invokeMethod("selectNotification", payload);

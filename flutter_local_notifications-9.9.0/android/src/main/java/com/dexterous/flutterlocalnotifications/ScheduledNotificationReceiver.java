@@ -24,13 +24,18 @@ import android.net.Network;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 
 /** Created by michaelbui on 24/3/18. */
 @Keep
 public class ScheduledNotificationReceiver extends BroadcastReceiver {
 
-  private Handler mainHandler = new Handler(Looper.getMainLooper());
+
+  private static Intent getLaunchIntent(Context context) {
+    String packageName = context.getPackageName();
+    PackageManager packageManager = context.getPackageManager();
+    return packageManager.getLaunchIntentForPackage(packageName);
+  }
+
   @Override
   public void onReceive(final Context context, Intent intent) {
     String notificationDetailsJson =
@@ -50,8 +55,10 @@ public class ScheduledNotificationReceiver extends BroadcastReceiver {
       Gson gson = FlutterLocalNotificationsPlugin.buildGson();
       Type type = new TypeToken<NotificationDetails>() {}.getType();
       NotificationDetails notificationDetails = gson.fromJson(notificationDetailsJson, type);
-      sendEvent(notificationDetails.payload);
-     // FlutterLocalNotificationsPlugin.showNotification(context, notificationDetails);
+      Intent newIntent = getLaunchIntent(context);
+      newIntent.setAction("SELECT_NOTIFICATION");
+      newIntent.putExtra("payload", notificationDetails.payload);
+      FlutterLocalNotificationsPlugin.sendNotificationPayloadMessage(newIntent);
       if (notificationDetails.scheduledNotificationRepeatFrequency != null) {
         FlutterLocalNotificationsPlugin.zonedScheduleNextNotification(context, notificationDetails);
       } else if (notificationDetails.matchDateTimeComponents != null) {
@@ -67,16 +74,5 @@ public class ScheduledNotificationReceiver extends BroadcastReceiver {
     }
   }
 
-  private void sendEvent(final String updatedPayload) {
-    FlutterLocalNotificationsPlugin localNotificationplugin = new FlutterLocalNotificationsPlugin();
-    Runnable runnable =
-            new Runnable() {
-              @Override
-              public void run() {
-                localNotificationplugin.sendLocalNotificationPayloadMessage(updatedPayload);
-              }
-            };
-    mainHandler.post(runnable);
 
-  }
 }

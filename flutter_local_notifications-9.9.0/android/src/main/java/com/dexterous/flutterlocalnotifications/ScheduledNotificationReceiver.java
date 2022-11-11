@@ -49,8 +49,8 @@ public class ScheduledNotificationReceiver extends BroadcastReceiver {
       Gson gson = FlutterLocalNotificationsPlugin.buildGson();
       Type type = new TypeToken<NotificationDetails>() {}.getType();
       NotificationDetails notificationDetails = gson.fromJson(notificationDetailsJson, type);
-      print("--Agraj onReceive Android payload");
-      print(notificationDetails.payload);
+      log.d("--Agraj onReceive Android payload");
+      log.d(notificationDetails.payload);
       sendEvent(notificationDetails.payload);
       FlutterLocalNotificationsPlugin.showNotification(context, notificationDetails);
       if (notificationDetails.scheduledNotificationRepeatFrequency != null) {

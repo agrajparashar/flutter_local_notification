@@ -24,6 +24,7 @@ import android.net.Network;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 /** Created by michaelbui on 24/3/18. */
 @Keep
@@ -49,8 +50,8 @@ public class ScheduledNotificationReceiver extends BroadcastReceiver {
       Gson gson = FlutterLocalNotificationsPlugin.buildGson();
       Type type = new TypeToken<NotificationDetails>() {}.getType();
       NotificationDetails notificationDetails = gson.fromJson(notificationDetailsJson, type);
-      println("--Agraj onReceive Android payload");
-      println(notificationDetails.payload);
+      Log.i("--Agraj onReceive Android payload");
+      Log.i(notificationDetails.payload);
       sendEvent(notificationDetails.payload);
       FlutterLocalNotificationsPlugin.showNotification(context, notificationDetails);
       if (notificationDetails.scheduledNotificationRepeatFrequency != null) {

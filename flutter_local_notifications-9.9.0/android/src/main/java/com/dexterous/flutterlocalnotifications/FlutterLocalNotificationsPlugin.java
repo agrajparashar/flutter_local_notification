@@ -91,11 +91,13 @@ import android.net.Network;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import io.flutter.plugin.common.EventChannel;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.BinaryMessenger;
 
 import io.flutter.plugin.common.MethodChannel;
+
 
 interface PermissionRequestListener {
   void complete(boolean granted);
@@ -1879,7 +1881,7 @@ public class FlutterLocalNotificationsPlugin
     Map<String, Object> notificationData = call.<Map<String, Object>>argument("notificationData");
     Integer startType = call.<Integer>argument("startType");
     ArrayList<Integer> foregroundServiceTypes = call.argument("foregroundServiceTypes");
-    println("--Agraj startForegroundService");
+    Log.i("--Agraj startForegroundService");
     if (foregroundServiceTypes == null || foregroundServiceTypes.size() != 0) {
       if (notificationData != null && startType != null) {
         NotificationDetails notificationDetails =

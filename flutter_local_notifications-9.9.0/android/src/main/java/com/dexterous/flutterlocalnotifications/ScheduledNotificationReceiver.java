@@ -30,13 +30,6 @@ import android.os.Looper;
 @Keep
 public class ScheduledNotificationReceiver extends BroadcastReceiver {
 
-
-  private static Intent getLaunchIntent(Context context) {
-    String packageName = context.getPackageName();
-    PackageManager packageManager = context.getPackageManager();
-    return packageManager.getLaunchIntentForPackage(packageName);
-  }
-
   @Override
   public void onReceive(final Context context, Intent intent) {
     String notificationDetailsJson =
@@ -56,7 +49,7 @@ public class ScheduledNotificationReceiver extends BroadcastReceiver {
       Gson gson = FlutterLocalNotificationsPlugin.buildGson();
       Type type = new TypeToken<NotificationDetails>() {}.getType();
       NotificationDetails notificationDetails = gson.fromJson(notificationDetailsJson, type);
-      FlutterLocalNotificationsPlugin.getFlutterLocalNotificationsPlugin().channel.invokeMethod("selectNotification", notificationDetails.payload);
+      FlutterLocalNotificationsPlugin.showNotification(context, notificationDetails,false);
       if (notificationDetails.scheduledNotificationRepeatFrequency != null) {
         FlutterLocalNotificationsPlugin.zonedScheduleNextNotification(context, notificationDetails);
       } else if (notificationDetails.matchDateTimeComponents != null) {

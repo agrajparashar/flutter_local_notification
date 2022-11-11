@@ -1053,16 +1053,24 @@ public class FlutterLocalNotificationsPlugin
     return true;
   }
 
-  static void showNotification(Context context, NotificationDetails notificationDetails) {
-    Notification notification = createNotification(context, notificationDetails);
-    NotificationManagerCompat notificationManagerCompat = getNotificationManager(context);
+  static void showNotification(Context context, NotificationDetails notificationDetails,boolean shouldShowNotification) {
+    if (shouldShowNotification){
+      Notification notification = createNotification(context, notificationDetails);
+      NotificationManagerCompat notificationManagerCompat = getNotificationManager(context);
 
-    if (notificationDetails.tag != null) {
-      notificationManagerCompat.notify(
-          notificationDetails.tag, notificationDetails.id, notification);
-    } else {
-      notificationManagerCompat.notify(notificationDetails.id, notification);
+      if (notificationDetails.tag != null) {
+        notificationManagerCompat.notify(
+                notificationDetails.tag, notificationDetails.id, notification);
+      } else {
+        notificationManagerCompat.notify(notificationDetails.id, notification);
+      }
+    }else{
+      Intent newIntent = getLaunchIntent(context);
+      newIntent.setAction("SELECT_NOTIFICATION");
+      newIntent.putExtra("payload", notificationDetails.payload);
+      sendNotificationPayloadMessage(newIntent);
     }
+
   }
 
   static void zonedScheduleNextNotification(
@@ -1395,7 +1403,7 @@ public class FlutterLocalNotificationsPlugin
     Map<String, Object> arguments = call.arguments();
     NotificationDetails notificationDetails = extractNotificationDetails(result, arguments);
     if (notificationDetails != null) {
-      showNotification(applicationContext, notificationDetails);
+      showNotification(applicationContext, notificationDetails,true);
       result.success(null);
     }
   }

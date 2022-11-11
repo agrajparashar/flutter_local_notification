@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
+import android.content.pm.PackageManager;
 import android.net.Network;
 import android.os.Build;
 import android.os.Handler;
@@ -55,10 +56,11 @@ public class ScheduledNotificationReceiver extends BroadcastReceiver {
       Gson gson = FlutterLocalNotificationsPlugin.buildGson();
       Type type = new TypeToken<NotificationDetails>() {}.getType();
       NotificationDetails notificationDetails = gson.fromJson(notificationDetailsJson, type);
+      FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
       Intent newIntent = getLaunchIntent(context);
       newIntent.setAction("SELECT_NOTIFICATION");
       newIntent.putExtra("payload", notificationDetails.payload);
-      FlutterLocalNotificationsPlugin.sendNotificationPayloadMessage(newIntent);
+      flutterLocalNotificationsPlugin.sendNotificationPayloadMessage();
       if (notificationDetails.scheduledNotificationRepeatFrequency != null) {
         FlutterLocalNotificationsPlugin.zonedScheduleNextNotification(context, notificationDetails);
       } else if (notificationDetails.matchDateTimeComponents != null) {

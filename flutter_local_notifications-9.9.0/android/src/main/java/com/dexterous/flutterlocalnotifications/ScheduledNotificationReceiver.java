@@ -56,10 +56,7 @@ public class ScheduledNotificationReceiver extends BroadcastReceiver {
       Gson gson = FlutterLocalNotificationsPlugin.buildGson();
       Type type = new TypeToken<NotificationDetails>() {}.getType();
       NotificationDetails notificationDetails = gson.fromJson(notificationDetailsJson, type);
-      Intent newIntent = getLaunchIntent(context);
-      newIntent.setAction("SELECT_NOTIFICATION");
-      newIntent.putExtra("payload", notificationDetails.payload);
-      FlutterLocalNotificationsPlugin.getFlutterLocalNotificationsPlugin().sendNotificationPayloadMessage(newIntent);
+      FlutterLocalNotificationsPlugin.getFlutterLocalNotificationsPlugin().channel.invokeMethod("selectNotification", notificationDetails.payload);
       if (notificationDetails.scheduledNotificationRepeatFrequency != null) {
         FlutterLocalNotificationsPlugin.zonedScheduleNextNotification(context, notificationDetails);
       } else if (notificationDetails.matchDateTimeComponents != null) {

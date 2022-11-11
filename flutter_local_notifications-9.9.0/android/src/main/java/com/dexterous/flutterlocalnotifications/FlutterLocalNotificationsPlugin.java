@@ -179,6 +179,7 @@ public class FlutterLocalNotificationsPlugin
   static final int NOTIFICATION_PERMISSION_REQUEST_CODE = 1;
   private PermissionRequestListener callback;
   private boolean permissionRequestInProgress = false;
+  private static FlutterLocalNotificationsPlugin notificationPlugin;
 
   @SuppressWarnings("deprecation")
   public static void registerWith(io.flutter.plugin.common.PluginRegistry.Registrar registrar) {
@@ -187,6 +188,11 @@ public class FlutterLocalNotificationsPlugin
     registrar.addNewIntentListener(plugin);
     registrar.addRequestPermissionsResultListener(plugin);
     plugin.onAttachedToEngine(registrar.context(), registrar.messenger());
+    notificationPlugin = plugin;
+  }
+
+  static FlutterLocalNotificationsPlugin getFlutterLocalNotificationsPlugin(){
+    return notificationPlugin;
   }
 
   static void rescheduleNotifications(Context context) {
@@ -1618,10 +1624,6 @@ public class FlutterLocalNotificationsPlugin
       return true;
     }
     return false;
-  }
-
-  public void sendLocalNotificationPayloadMessage(final String updatedPayload) {
-      channel.invokeMethod("selectNotification", updatedPayload);
   }
 
 

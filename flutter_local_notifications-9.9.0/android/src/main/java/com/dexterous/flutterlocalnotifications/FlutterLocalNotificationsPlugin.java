@@ -1879,7 +1879,7 @@ public class FlutterLocalNotificationsPlugin
     Map<String, Object> notificationData = call.<Map<String, Object>>argument("notificationData");
     Integer startType = call.<Integer>argument("startType");
     ArrayList<Integer> foregroundServiceTypes = call.argument("foregroundServiceTypes");
-    log.d("--Agraj startForegroundService");
+    println("--Agraj startForegroundService");
     if (foregroundServiceTypes == null || foregroundServiceTypes.size() != 0) {
       if (notificationData != null && startType != null) {
         NotificationDetails notificationDetails =

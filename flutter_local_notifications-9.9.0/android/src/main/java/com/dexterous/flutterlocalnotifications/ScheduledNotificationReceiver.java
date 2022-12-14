@@ -3,13 +3,16 @@ package com.dexterous.flutterlocalnotifications;
 import android.app.Notification;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+
 import android.content.Intent;
 
 import androidx.annotation.Keep;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.dexterous.flutterlocalnotifications.models.NotificationDetails;
 import com.dexterous.flutterlocalnotifications.utils.StringUtils;
+import com.dexterous.flutterlocalnotifications.utils.Util;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -19,6 +22,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.content.pm.PackageManager;
 import android.net.Network;
@@ -30,6 +34,11 @@ import android.os.Looper;
 @Keep
 public class ScheduledNotificationReceiver extends BroadcastReceiver {
 
+  private static Intent getLaunchIntent(Context context) {
+    String packageName = context.getPackageName();
+    PackageManager packageManager = context.getPackageManager();
+    return packageManager.getLaunchIntentForPackage(packageName);
+  }
   @Override
   public void onReceive(final Context context, Intent intent) {
     String notificationDetailsJson =
@@ -49,7 +58,20 @@ public class ScheduledNotificationReceiver extends BroadcastReceiver {
       Gson gson = FlutterLocalNotificationsPlugin.buildGson();
       Type type = new TypeToken<NotificationDetails>() {}.getType();
       NotificationDetails notificationDetails = gson.fromJson(notificationDetailsJson, type);
-      FlutterLocalNotificationsPlugin.showNotification(context, notificationDetails,false);
+
+        String appState = Util.getAppState();
+        SharedPreferences sharedPreferences = context.getSharedPreferences("FlutterSharedPreferences",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("app_state",appState);
+        editor.commit();
+        if (Util.foregrounded()){
+          Intent newIntent = new Intent("SELECT_NOTIFICATION");
+          newIntent.setAction("SELECT_NOTIFICATION");
+          newIntent.putExtra("payload", notificationDetails.payload);
+          LocalBroadcastManager.getInstance(context).sendBroadcast(newIntent);
+        }
+        else{FlutterLocalNotificationsPlugin.showNotification(context, notificationDetails);}
+
       if (notificationDetails.scheduledNotificationRepeatFrequency != null) {
         FlutterLocalNotificationsPlugin.zonedScheduleNextNotification(context, notificationDetails);
       } else if (notificationDetails.matchDateTimeComponents != null) {

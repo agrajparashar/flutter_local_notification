@@ -30,6 +30,7 @@ import androidx.annotation.NonNull;
 import androidx.core.app.*;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.IconCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.dexterous.flutterlocalnotifications.models.BitmapSource;
 import com.dexterous.flutterlocalnotifications.models.DateTimeComponents;
@@ -91,6 +92,8 @@ import android.net.Network;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
+
 import io.flutter.plugin.common.EventChannel;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.BinaryMessenger;
@@ -172,14 +175,14 @@ public class FlutterLocalNotificationsPlugin
   private static final String CANCEL_TAG = "tag";
   static String NOTIFICATION_DETAILS = "notificationDetails";
   static Gson gson;
-  public MethodChannel channel;
+   MethodChannel channel;
   private Context applicationContext;
   private Activity mainActivity;
   private Intent launchIntent;
   static final int NOTIFICATION_PERMISSION_REQUEST_CODE = 1;
   private PermissionRequestListener callback;
   private boolean permissionRequestInProgress = false;
-  private static FlutterLocalNotificationsPlugin notificationPlugin;
+
 
   @SuppressWarnings("deprecation")
   public static void registerWith(io.flutter.plugin.common.PluginRegistry.Registrar registrar) {
@@ -188,12 +191,9 @@ public class FlutterLocalNotificationsPlugin
     registrar.addNewIntentListener(plugin);
     registrar.addRequestPermissionsResultListener(plugin);
     plugin.onAttachedToEngine(registrar.context(), registrar.messenger());
-    notificationPlugin = plugin;
   }
 
-  static FlutterLocalNotificationsPlugin getFlutterLocalNotificationsPlugin(){
-    return notificationPlugin;
-  }
+
 
   static void rescheduleNotifications(Context context) {
     initAndroidThreeTen(context);
@@ -1053,8 +1053,8 @@ public class FlutterLocalNotificationsPlugin
     return true;
   }
 
-  static void showNotification(Context context, NotificationDetails notificationDetails,boolean shouldShowNotification) {
-    if (shouldShowNotification){
+  static void showNotification(Context context, NotificationDetails notificationDetails) {
+
       Notification notification = createNotification(context, notificationDetails);
       NotificationManagerCompat notificationManagerCompat = getNotificationManager(context);
 
@@ -1064,12 +1064,6 @@ public class FlutterLocalNotificationsPlugin
       } else {
         notificationManagerCompat.notify(notificationDetails.id, notification);
       }
-    }else{
-      Intent newIntent = getLaunchIntent(context);
-      newIntent.setAction("SELECT_NOTIFICATION");
-      newIntent.putExtra("payload", notificationDetails.payload);
-      sendNotificationPayloadMessage(newIntent);
-    }
 
   }
 
@@ -1228,7 +1222,16 @@ public class FlutterLocalNotificationsPlugin
     this.applicationContext = context;
     this.channel = new MethodChannel(binaryMessenger, METHOD_CHANNEL);
     this.channel.setMethodCallHandler(this);
+    LocalBroadcastManager.getInstance(applicationContext).registerReceiver( new BroadcastReceiver() {
+      @Override
+      public void onReceive(Context context, Intent intent) {
+        String payload = intent.getStringExtra(PAYLOAD);
+        channel.invokeMethod("selectNotification", payload);
+      }
+    },new IntentFilter("SELECT_NOTIFICATION"));
   }
+
+
 
   @Override
   public void onAttachedToEngine(FlutterPluginBinding binding) {
@@ -1403,7 +1406,7 @@ public class FlutterLocalNotificationsPlugin
     Map<String, Object> arguments = call.arguments();
     NotificationDetails notificationDetails = extractNotificationDetails(result, arguments);
     if (notificationDetails != null) {
-      showNotification(applicationContext, notificationDetails,true);
+      showNotification(applicationContext, notificationDetails);
       result.success(null);
     }
   }
